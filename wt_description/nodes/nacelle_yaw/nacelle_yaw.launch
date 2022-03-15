@@ -1,0 +1,6 @@
+<launch>
+
+    <node pkg = "wt_description" type = "Listener_nacelle2barge.py" name = "nacelle_tf_listener" />
+    <node pkg = "wt_description" type = "Subscriber_nacelle2barge.py" name = "nacelle_tf_subscriber"/>
+    
+</launch>

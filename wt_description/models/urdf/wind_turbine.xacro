@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+
+<robot name="wind_turbine" xmlns:xacro = "https://www.ros.org/wiki/xacro">
+    <enable_wind>1</enable_wind>
+
+    <!--Define White Shade-->
+    <material name = "white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <!-- Used for fixing robot to Gazebo 'base_link' -->
+<!--     <link name="world"/>
+
+    <joint name="fixed" type="fixed">
+        <parent link="world"/>
+        <child link="base_tower"/>
+    </joint> -->
+
+
+    <!-- <link name = "barge">
+        <visual>
+            <material name = "white"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="5 5 2"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0.0 0 0.0" xyz="0.0 0.0 0"/>
+            <geometry>
+                <box size="5 5 2"/>
+            </geometry>
+        </collision>    
+
+        <inertial>
+            <mass value="50847.5"/>
+            <inertia ixx="122881.45833333334" ixy="0.0" ixz="0.0" iyy="211864.58333333334" iyz="0.0" izz="122881.45833333334"/>
+        </inertial> 
+    </link> -->
+
+    <link name = "barge">
+        <visual>
+            <material name = "white"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="5 5 .5"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0.0 0 0.0" xyz="0.0 0.0 0"/>
+            <geometry>
+                <box size="5 5 .5"/>
+            </geometry>
+        </collision>        
+
+        <inertial>
+            <mass value="13345.94726"/>
+            <inertia ixx="28082.09735958334" ixy="0.0" ixz="0.0" iyy="55608.11358333334" iyz="0.0" izz="28082.09735958334"/>
+        </inertial> 
+    </link>
+    
+    <joint name="base_tower__barge" type="fixed">
+        <parent link="barge"/>
+        <child link="base_tower"/>
+    </joint>
+
+    <!--base tower-->
+    <link name="base_tower">
+        <visual>
+            <material name = "white"/>
+            <origin rpy="0.0 0 0.0" xyz="0.0 0.0 3"/>
+            <geometry>
+                <cylinder radius=".2" length="6"/> 
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0.0 0 0.0" xyz="0.0 0.0 3"/>
+            <geometry>
+                <cylinder radius=".2" length="6"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="100"/>
+            <inertia ixx="30.2" ixy="0.0" ixz="0.0" iyy="30.2" iyz="0.0" izz="0.2"/>
+        </inertial> 
+    </link>
+
+    <joint name="base_tower__nacelle" type="continuous">
+        <parent link="base_tower"/>
+        <child link="nacelle"/>
+        <axis xyz="0 0 1"/>
+        <origin xyz="0.0 0.0 6"/>
+    </joint>
+
+    <transmission name = "base_towerTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_tower__nacelle">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_tower__nacelleMotor">
+            <mechanicalReduction>1</mechanicalReduction>
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+
+    <!--Nacelle-->
+    <link name="nacelle">
+        <enable_wind>1</enable_wind>
+        <visual>
+            <material name = "white"/>
+            <origin rpy="0.0 1.570796 0.0" xyz="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius=".2" length="1"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0.0 1.570796 0.0" xyz="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius=".2" length="1"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="10.0"/>
+            <inertia ixx=".93" ixy="0.0" ixz="0.0" iyy="0.93" iyz="0.0" izz="0.2"/>
+        </inertial>
+    </link>
+    
+    <joint name="nacelle__hub" type="continuous">
+        <parent link="nacelle"/>
+        <child link="hub"/>
+        <axis xyz="1 0 0.0"/>
+        <origin xyz="0.0 0.0 0"/>
+    </joint>
+
+    <transmission name = "nacelle__hubTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="nacelle__hub">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="nacelle__hubMotor">
+            <mechanicalReduction>1</mechanicalReduction>
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+
+    <!--Hub-->
+    <link name="hub">
+        <enable_wind>1</enable_wind>
+        <visual>
+            <material name = "white"/>
+            <origin rpy="0.0 0.0 0.0" xyz=".5 0.0 0"/>
+            <geometry>
+                <sphere radius="0.2"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0.0 0.0 0.0" xyz=".5 0.0 0"/>
+            <geometry>
+                <sphere radius="0.2"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="10"/>
+            <inertia ixx="0.16" ixy="0.0" ixz="0.0" iyy="0.16" iyz="0.0" izz="0.16"/>
+        </inertial>
+
+    </link>
+
+    <joint name="hub__blade 1" type="fixed">
+        <parent link="hub"/>
+        <child link="blade_1"/>
+    </joint>
+
+    <joint name="hub__blade 2" type="fixed">
+        <parent link="hub"/>
+        <child link="blade_2"/>
+    </joint>
+
+    <joint name="hub__blade 3" type="fixed">
+        <parent link="hub"/>
+        <child link="blade_3"/>
+    </joint>
+
+     <!--blade_1-->
+    <link name = "blade_1">
+        <enable_wind>1</enable_wind>
+        <visual>
+            <material name  = "white"/>
+            <origin rpy="0 0.0 0.0" xyz="0.5 0 1.5"/>
+            <geometry>
+                <cylinder radius=".05" length="3.2"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0.0 0.0" xyz="0.5 0 1.9"/>
+            <geometry>
+                <cylinder radius=".05" length="3.5"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="10.0"/>
+            <inertia ixx="10.2" ixy="0.0" ixz="0.0" iyy="10.2" iyz="0.0" izz="0.0125"/>
+        </inertial>
+
+    </link>
+
+    <!--blade_2-->
+    <link name = "blade_2">
+        <enable_wind>1</enable_wind>
+        <visual>
+            <material name  = "white"/>
+            <origin rpy="45 0.0 0.0" xyz="0.5 1.5 -1"/>
+            <geometry>
+                <cylinder radius=".05" length="3.5"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="45 0.0 0.0" xyz="0.5 1.5 -1"/>
+            <geometry>
+                <cylinder radius=".05" length="3.5"/>
+            </geometry>
+        </collision>
+        
+        <inertial>
+            <mass value="10.0"/>
+            <inertia ixx="10.2" ixy="0.0" ixz="0.0" iyy="10.2" iyz="0.0" izz="0.0125"/>
+        </inertial>    
+    </link>
+
+    <!--blade_3-->
+    <link name = "blade_3">
+        <enable_wind>1</enable_wind>
+        <visual>
+            <material name  = "white"/>
+            <origin rpy="-45 0.0 0.0" xyz="0.5 -1.5 -1"/>
+            <geometry>
+                <cylinder radius=".05" length="3.5"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="-45 0.0 0.0" xyz="0.5 -1.5 -1"/>
+            <geometry>
+                <cylinder radius=".05" length="3.5"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="10.0"/>
+            <inertia ixx="10.2" ixy="0.0" ixz="0.0" iyy="10.2" iyz="0.0" izz="0.0125"/>
+        </inertial>     
+    </link>
+
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/wind_turbine</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+
+        <!--IMU sensor data-->
+        <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <bodyName>blade_3</bodyName>
+            <topicName>/wind_turbine/blade_imu</topicName>
+            <serviceName>imu_service</serviceName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <updateRate>20.0</updateRate>
+        </plugin>
+        
+        <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <bodyName>barge</bodyName>
+            <topicName>/wind_turbine/barge_imu</topicName>
+            <serviceName>imu_service</serviceName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <updateRate>20.0</updateRate>
+        </plugin>
+<!-- 
+        <plugin name="BuoyancyPlugin" filename="libBuoyancyPlugin.so">
+            <fluid_density>1000</fluid_density>
+        </plugin>    
+         -->
+    </gazebo>
+</robot>
